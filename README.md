@@ -8,6 +8,10 @@
 
 The demo workspace uses a fictional regulated SaaS company called **NorthstarIQ**. Its source files include the kinds of contradictions real revenue teams deal with: shifting buyer focus, unclear pricing, risky compliance language, competitor pressure, sales objections, and inconsistent brand guidance.
 
+## Preview
+
+![GTM OS workspace screenshot](docs/screenshot.png)
+
 ## What It Does
 
 1. **Indexes source material** from seeded Markdown documents and browser-uploaded Markdown/TXT files.
@@ -43,6 +47,20 @@ Where is our positioning inconsistent?
 ```
 
 Each answer should cite the relevant source chunks and explain what decision the team should make next.
+
+## Example Output
+
+```text
+Question: What pricing inconsistency should sales know?
+
+Answer:
+Sales should avoid quoting a single definitive price until pricing is reconciled. The source set contains conflicting references to package pricing, usage-based expansion, and pilot terms. The safest next step is to align on approved pricing language before using these materials in customer conversations.
+
+Citations:
+- pricing-notes.md
+- sales-objections.md
+- positioning-brief.md
+```
 
 ## Architecture
 
