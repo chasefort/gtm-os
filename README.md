@@ -16,6 +16,18 @@ The demo workspace uses a fictional regulated SaaS company called **NorthstarIQ*
 4. **Answers with citations** so reviewers can inspect the source snippets behind each response.
 5. **Supports GTM workflows** such as positioning checks, pricing inconsistency reviews, objection handling, claim safety, and campaign planning.
 
+## Business Applications
+
+GTM OS is a reference pattern for teams that have plenty of documents but no reliable operating layer on top of them. The same approach can support:
+
+- **Sales enablement:** turn product docs, call notes, battlecards, and pricing material into cited answers reps can trust.
+- **Marketing review:** check campaign copy against positioning, compliance language, approved claims, and product reality.
+- **Founder-led GTM:** keep messaging, objections, pricing, and ICP assumptions in one source-grounded workspace.
+- **Customer onboarding:** answer implementation or policy questions from a controlled source set instead of relying on memory.
+- **Internal knowledge QA:** identify contradictions between strategy docs, support notes, website copy, and sales collateral.
+
+The core transferable idea is a reviewable AI workspace: answers are useful only when the user can inspect the source material behind them and decide what to do next.
+
 ## Example Questions
 
 ```text
@@ -44,6 +56,14 @@ Each answer should cite the relevant source chunks and explain what decision the
 | Python version | Streamlit implementation retained in `app.py` |
 
 The current Vercel app works without API keys by using local retrieval over the included fictional source set. Hosted synthesis is optional.
+
+## Transferable Implementation Patterns
+
+- **Local-first retrieval:** browser-side chunking and retrieval make the demo usable without API keys and keep the grounding layer visible.
+- **Optional model enhancement:** hosted synthesis improves open-ended answers without making the product unusable when a key is missing.
+- **Cited answer contract:** every answer is paired with source snippets so reviewers can validate claims before using them externally.
+- **Contradiction-friendly test data:** the fictional NorthstarIQ source set includes realistic inconsistencies, making the app useful as a workflow demo instead of a clean toy dataset.
+- **Dual implementation path:** the retained Streamlit version shows the same product concept in a Python data-app shape, while the Next.js app demonstrates a web-ready UX.
 
 ## Run Locally
 
