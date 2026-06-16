@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 380" width="1280" height="380" role="img" aria-label="GTM OS animated logo">
+  <title>GTM OS - source-grounded workspace</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="62%" stop-color="#f7f8fb"/>
+      <stop offset="100%" stop-color="#eef2f8"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="45%" r="52%">
+      <stop offset="0%" stop-color="#3157d5" stop-opacity="0.22"/>
+      <stop offset="48%" stop-color="#6f58d9" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softShadow" x="-35%" y="-35%" width="170%" height="170%">
+      <feDropShadow dx="0" dy="24" stdDeviation="22" flood-color="#101114" flood-opacity="0.13"/>
+    </filter>
+    <style>
+      .sans { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .mono { font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace; }
+    </style>
+  </defs>
+
+  <rect width="1280" height="380" fill="url(#bg)"/>
+  <rect width="1280" height="380" fill="url(#glow)">
+    <animate attributeName="opacity" values="0.68;1;0.68" dur="6.5s" repeatCount="indefinite"/>
+  </rect>
+
+  <g opacity="0.16" stroke="#3157d5" stroke-width="1">
+    <path d="M0 108H1280M0 272H1280"/>
+    <path d="M254 0V380M1026 0V380"/>
+  </g>
+
+  <g transform="translate(640 136)" text-anchor="middle">
+    <g opacity="0.5">
+      <circle r="86" fill="none" stroke="#3157d5" stroke-opacity="0.22" stroke-width="2" stroke-dasharray="10 18">
+        <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="18s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="116" fill="none" stroke="#6f58d9" stroke-opacity="0.15" stroke-width="2" stroke-dasharray="4 22">
+        <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="24s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+
+    <g>
+      <circle r="5" fill="#3157d5">
+        <animateMotion dur="7s" repeatCount="indefinite" path="M86,0 A86,86 0 1,1 -86,0 A86,86 0 1,1 86,0"/>
+      </circle>
+      <circle r="4" fill="#0f8c6f">
+        <animateMotion dur="9s" repeatCount="indefinite" path="M-116,0 A116,116 0 1,1 116,0 A116,116 0 1,1 -116,0"/>
+      </circle>
+    </g>
+
+    <g transform="translate(-54 -54)" filter="url(#softShadow)">
+      <rect width="108" height="108" rx="26" fill="#ffffff" stroke="#3157d5" stroke-width="3"/>
+      <rect x="25" y="25" width="58" height="58" rx="16" fill="#3157d5"/>
+      <path d="M39 54h30M54 39v30" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round"/>
+      <rect x="45" y="45" width="18" height="18" rx="5" fill="#0f8c6f">
+        <animateTransform attributeName="transform" type="rotate" from="0 54 54" to="360 54 54" dur="5.6s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="18" y="18" width="72" height="72" rx="20" fill="none" stroke="#3157d5" stroke-opacity="0.26" stroke-width="2">
+        <animate attributeName="opacity" values="0.18;0.5;0.18" dur="3.1s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+
+    <text x="0" y="112" class="sans" font-size="52" font-weight="840" fill="#101114">GTM OS</text>
+    <text x="0" y="150" class="mono" font-size="14" letter-spacing="3.4" fill="#697184">SOURCE-GROUNDED WORKSPACE</text>
+    <line x1="-178" x2="178" y1="174" y2="174" stroke="#3157d5" stroke-width="3" stroke-linecap="round" stroke-dasharray="42 28">
+      <animate attributeName="stroke-dashoffset" from="0" to="-140" dur="5s" repeatCount="indefinite"/>
+    </line>
+  </g>
+</svg>

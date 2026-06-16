@@ -1,0 +1,21 @@
+[project]
+name = "gtm-os"
+version = "0.1.0"
+description = "Python Streamlit version of the GTM OS source-grounded workspace."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "openai>=1.88.0",
+    "pymupdf>=1.24.0",
+    "python-dotenv>=1.0.1",
+    "requests>=2.32.0",
+    "streamlit>=1.36.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.2.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]

@@ -1,0 +1,34 @@
+<svg width="640" height="180" viewBox="0 0 640 180" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">GTM OS logo</title>
+  <desc id="desc">A technical wordmark for the GTM OS source-grounded workspace.</desc>
+  <rect width="640" height="180" rx="32" fill="#F7F8FB"/>
+  <rect x="1" y="1" width="638" height="178" rx="31" stroke="#101114" stroke-opacity=".08" stroke-width="2"/>
+  <g filter="url(#glow)">
+    <path d="M76 91C76 62.281 99.281 39 128 39C156.719 39 180 62.281 180 91C180 119.719 156.719 143 128 143C99.281 143 76 119.719 76 91Z" fill="url(#orb)"/>
+    <path d="M101 91C101 76.088 113.088 64 128 64C142.912 64 155 76.088 155 91C155 105.912 142.912 118 128 118C113.088 118 101 105.912 101 91Z" fill="#F7F8FB"/>
+    <path d="M128 51V131" stroke="#F7F8FB" stroke-width="7" stroke-linecap="round"/>
+    <path d="M88 91H168" stroke="#F7F8FB" stroke-width="7" stroke-linecap="round"/>
+    <path d="M99.75 62.75L156.25 119.25" stroke="#F7F8FB" stroke-width="7" stroke-linecap="round"/>
+    <path d="M156.25 62.75L99.75 119.25" stroke="#F7F8FB" stroke-width="7" stroke-linecap="round"/>
+  </g>
+  <path d="M217 57H277V72H235V85H273V100H235V123H217V57ZM289 57H347V72H307V82H343V97H307V108H348V123H289V57ZM363 57H381V107H418V123H363V57ZM431 57H489V72H449V82H485V97H449V108H490V123H431V57Z" fill="#101114" opacity=".18"/>
+  <text x="216" y="112" fill="#101114" font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="72" font-weight="780" letter-spacing="-2">GTM OS</text>
+  <path d="M218 137H505" stroke="url(#line)" stroke-width="3" stroke-linecap="round"/>
+  <path d="M530 137H558" stroke="#5AD7FF" stroke-width="3" stroke-linecap="round"/>
+  <defs>
+    <linearGradient id="orb" x1="91" y1="51" x2="168" y2="130" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8A8DFF"/>
+      <stop offset=".55" stop-color="#5E6AD2"/>
+      <stop offset="1" stop-color="#5AD7FF"/>
+    </linearGradient>
+    <linearGradient id="line" x1="218" y1="137" x2="505" y2="137" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8A8DFF"/>
+      <stop offset="1" stop-color="#5AD7FF"/>
+    </linearGradient>
+    <filter id="glow" x="44" y="7" width="168" height="168" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.368627 0 0 0 0 0.415686 0 0 0 0 0.823529 0 0 0 .45 0"/>
+      <feBlend in="SourceGraphic"/>
+    </filter>
+  </defs>
+</svg>
