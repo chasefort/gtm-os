@@ -4,9 +4,11 @@
 
 # GTM OS
 
-**Source-grounded workspace for GTM teams.** GTM OS turns scattered go-to-market documents into cited answers, strategy checks, and reusable thinking grounded in the material a team already works from.
+**Ask your company docs a question. Get the line it came from.** Load pricing notes, call notes, positioning memos and competitor research. Ask in plain English. Every answer comes back with the source text behind it, and clicking a citation opens that document with the exact lines marked.
 
-The demo workspace uses a fictional regulated SaaS company called **NorthstarIQ**. Its source files include the kinds of contradictions real revenue teams deal with: shifting buyer focus, unclear pricing, risky compliance language, competitor pressure, sales objections, and inconsistent brand guidance.
+The site has two parts: a landing page at `/` and the working tool at `/tool`. The tool starts empty. Load the demo set in one click, or drop in your own Markdown and text files.
+
+The demo set is seven documents from a fictional software company. They contradict each other on purpose: two different prices, two different buyers, and a few claims that would not survive a legal review.
 
 ## Preview
 
@@ -66,22 +68,23 @@ Citations:
 
 | Layer | Implementation |
 | --- | --- |
-| App | Next.js App Router, React, TypeScript |
-| Source material | Fictional NorthstarIQ Markdown files in `data/northstariq/` |
-| Retrieval | Browser-side chunking and lightweight local RAG |
-| Hosted synthesis | Optional `/api/ask` route using OpenAI |
-| Review UX | Source preview, citation chips, copy/download controls |
+| App | Next.js App Router, React 19, TypeScript, plain CSS |
+| Landing motion | GSAP tweens fired by an IntersectionObserver, Lenis smooth scroll |
+| Demo material | Fictional Markdown files in `data/demo-workspace/` |
+| Retrieval | `lib/rag.ts`: heading-aware chunking and BM25 scoring, in the browser |
+| Write-up | Optional `/api/ask` route using OpenAI |
+| Review UX | Line-accurate source reader, citation chips, copy and Markdown export |
 | Python version | Streamlit implementation retained in `app.py` |
 
-The current Vercel app works without API keys by using local retrieval over the included fictional source set. Hosted synthesis is optional.
+Retrieval never leaves the browser. Chunks carry their source line numbers, which is what lets the reader highlight the exact lines an answer used. With no `OPENAI_API_KEY` set, answers are assembled from the retrieved passages and the UI labels the mode as local.
 
 ## Transferable Implementation Patterns
 
-- **Local-first retrieval:** browser-side chunking and retrieval make the demo usable without API keys and keep the grounding layer visible.
-- **Optional model enhancement:** hosted synthesis improves open-ended answers without making the product unusable when a key is missing.
-- **Cited answer contract:** every answer is paired with source snippets so reviewers can validate claims before using them externally.
-- **Contradiction-friendly test data:** the fictional NorthstarIQ source set includes realistic inconsistencies, making the app useful as a workflow demo instead of a clean toy dataset.
-- **Dual implementation path:** the retained Streamlit version shows the same product concept in a Python data-app shape, while the Next.js app demonstrates a web-ready UX.
+- **Local-first retrieval:** browser-side chunking and BM25 scoring make the tool usable with no key and keep the grounding layer inspectable.
+- **Line-level provenance:** passages carry line ranges, so a citation opens the document at the marked lines instead of restating a snippet.
+- **Corpus-agnostic answers:** conflicting figures and absolute claims are detected from whatever is loaded, so uploads behave the same way the demo set does.
+- **Optional model step:** hosted write-up improves open-ended answers without making the tool useless when the key is missing.
+- **Contradiction-friendly test data:** the demo documents include realistic inconsistencies instead of a clean toy dataset.
 
 ## Run Locally
 
@@ -92,7 +95,7 @@ npm install
 npm run dev
 ```
 
-Open <http://localhost:3000>.
+Open <http://localhost:3000>. The tool lives at `/tool`.
 
 Python Streamlit version:
 
@@ -143,7 +146,7 @@ uv run pytest -q
 
 ## Data and Safety
 
-All included NorthstarIQ documents are fictional. Do not add real customer, employer, candidate, or confidential company data to the public repository.
+All included demo documents are fictional. Do not add real customer, employer, candidate, or confidential company data to the public repository.
 
 ## License
 
