@@ -57,59 +57,73 @@ export async function POST(request: Request) {
     'confidence: "Well supported" only when several passages directly answer the question; "Partly supported" when the answer needs a caveat; "Thin" when the documents do not answer it.',
   ].join("\n");
 
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: process.env.OPENAI_MODEL || "gpt-4.1-mini",
-      temperature: 0.2,
-      response_format: { type: "json_object" },
-      messages: [
-        { role: "system", content: instructions },
-        { role: "user", content: `Question: ${query}\n\nPassages:\n${context}` },
-      ],
-    }),
-  });
+  const allowed = new Set(evidence.map((item) => item.reference));
+  let failureReason = "The model request failed.";
 
-  if (!response.ok) {
-    return NextResponse.json({ summary: null, reason: "The model request failed." });
-  }
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: process.env.OPENAI_MODEL || "gpt-4.1-mini",
+        temperature: 0,
+        response_format: { type: "json_object" },
+        messages: [
+          { role: "system", content: instructions },
+          { role: "user", content: `Question: ${query}\n\nPassages:\n${context}` },
+          ...(attempt
+            ? [{
+                role: "system",
+                content: "Your previous response failed validation. Check that the summary and every point use only the supplied citation numbers.",
+              }]
+            : []),
+        ],
+      }),
+    });
 
-  const data = await response.json();
-  const raw = data.choices?.[0]?.message?.content;
-  if (!raw) return NextResponse.json({ summary: null, reason: "Empty model response." });
+    if (!response.ok) continue;
 
-  try {
-    const parsed = JSON.parse(raw) as {
-      summary?: string;
-      points?: string[];
-      watchOut?: string | null;
-      nextStep?: string;
-      confidence?: Confidence;
-    };
-
-    const allowed = new Set(evidence.map((item) => item.reference));
-    const points = Array.isArray(parsed.points) ? parsed.points.slice(0, 3) : [];
-    const valid =
-      Boolean(parsed.summary) &&
-      citationsAreValid(parsed.summary || "", allowed) &&
-      points.every((point) => citationsAreValid(point, allowed)) &&
-      (!parsed.watchOut || citationsAreValid(parsed.watchOut, allowed));
-    if (!valid) {
-      return NextResponse.json({ summary: null, reason: "Model citations failed validation." });
+    const data = await response.json();
+    const raw = data.choices?.[0]?.message?.content;
+    if (!raw) {
+      failureReason = "Empty model response.";
+      continue;
     }
 
-    return NextResponse.json({
-      summary: parsed.summary,
-      points,
-      watchOut: parsed.watchOut ?? null,
-      nextStep: parsed.nextStep || "",
-      confidence: parsed.confidence && CONFIDENCE.has(parsed.confidence) ? parsed.confidence : "Thin",
-    });
-  } catch {
-    return NextResponse.json({ summary: null, reason: "Model returned something unreadable." });
+    try {
+      const parsed = JSON.parse(raw) as {
+        summary?: string;
+        points?: string[];
+        watchOut?: string | null;
+        nextStep?: string;
+        confidence?: Confidence;
+      };
+
+      const points = Array.isArray(parsed.points) ? parsed.points.slice(0, 3) : [];
+      const valid =
+        Boolean(parsed.summary) &&
+        citationsAreValid(parsed.summary || "", allowed) &&
+        points.every((point) => citationsAreValid(point, allowed)) &&
+        (!parsed.watchOut || citationsAreValid(parsed.watchOut, allowed));
+      if (!valid) {
+        failureReason = "Model citations failed validation.";
+        continue;
+      }
+
+      return NextResponse.json({
+        summary: parsed.summary,
+        points,
+        watchOut: parsed.watchOut ?? null,
+        nextStep: parsed.nextStep || "",
+        confidence: parsed.confidence && CONFIDENCE.has(parsed.confidence) ? parsed.confidence : "Thin",
+      });
+    } catch {
+      failureReason = "Model returned something unreadable.";
+    }
   }
+
+  return NextResponse.json({ summary: null, reason: failureReason });
 }
