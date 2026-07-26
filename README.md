@@ -139,6 +139,8 @@ The Vercel URL serves the usable Next.js workspace. The Dockerfile is only neede
 ## Validation
 
 ```bash
+npm test
+npm run lint
 npm run build
 uv run python -m py_compile app.py src/generation/rag.py
 uv run pytest -q
