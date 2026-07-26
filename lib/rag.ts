@@ -292,7 +292,7 @@ export async function buildAnswer(docs: SourceDoc[], query: string): Promise<Ans
       ...local,
       summary: data.summary,
       points: data.points?.length ? data.points : local.points,
-      watchOut: data.watchOut ?? local.watchOut,
+      watchOut: data.watchOut === undefined ? local.watchOut : data.watchOut,
       nextStep: data.nextStep || local.nextStep,
       confidence:
         data.confidence === "Well supported" ||
