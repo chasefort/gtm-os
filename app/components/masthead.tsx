@@ -1,6 +1,13 @@
 import Link from "next/link";
 
-export function Masthead({ current }: { current: "home" | "tool" }) {
+type Page = "home" | "how" | "tech" | "tool";
+
+const links: Array<{ key: Page; href: string; label: string }> = [
+  { key: "how", href: "/how-it-works", label: "How it works" },
+  { key: "tech", href: "/tech", label: "Tech" },
+];
+
+export function Masthead({ current }: { current: Page }) {
   return (
     <header className="masthead">
       <div className="shell masthead-inner">
@@ -14,30 +21,25 @@ export function Masthead({ current }: { current: "home" | "tool" }) {
         </Link>
 
         <nav className="mast-nav">
-          {current === "home" ? (
-            <>
-              <a className="mast-link mast-link-optional" href="#how">
-                How it works
-              </a>
-              <a className="mast-link mast-link-optional" href="#ask">
-                What to ask it
-              </a>
-              <a className="mast-link mast-link-optional" href="#build">
-                How it is built
-              </a>
-              <Link className="btn btn-primary btn-sm" href="/tool">
-                Open the tool
-              </Link>
-            </>
+          {links.map((link) => (
+            <Link
+              key={link.key}
+              className="mast-link mast-link-optional"
+              href={link.href}
+              aria-current={current === link.key ? "page" : undefined}
+            >
+              {link.label}
+            </Link>
+          ))}
+
+          {current === "tool" ? (
+            <span className="mast-link" aria-current="page">
+              Tool
+            </span>
           ) : (
-            <>
-              <Link className="mast-link" href="/">
-                Overview
-              </Link>
-              <span className="mast-link" aria-current="page">
-                Tool
-              </span>
-            </>
+            <Link className="btn btn-primary btn-sm" href="/tool">
+              Open the tool
+            </Link>
           )}
         </nav>
       </div>

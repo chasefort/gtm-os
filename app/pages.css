@@ -1,0 +1,460 @@
+/* ============================================================
+   Shared layout for the two detail pages: /how-it-works and /tech
+   ============================================================ */
+
+.page-head {
+  padding-block: clamp(48px, 6vw, 88px) clamp(32px, 4vw, 56px);
+}
+
+.page-head .tag {
+  display: block;
+  margin-bottom: var(--sp-sm);
+}
+
+.page-head h1 {
+  font-size: clamp(2rem, 3.5vw, 3.15rem);
+  max-width: 20ch;
+  margin-bottom: var(--sp-md);
+}
+
+.page-head .lede {
+  max-width: 62ch;
+}
+
+/* ---------------------------------------------- numbered sections */
+
+.stack-section {
+  padding-block: clamp(48px, 6vw, 88px);
+  border-top: 1px solid var(--line-soft);
+}
+
+.stack-head {
+  display: grid;
+  gap: var(--sp-sm);
+  margin-bottom: var(--sp-lg);
+}
+
+@media (min-width: 900px) {
+  .stack-head {
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: var(--sp-lg);
+    align-items: start;
+  }
+
+  .stack-head .tag {
+    align-self: start;
+    padding-top: 0.55em;
+    letter-spacing: 0.1em;
+  }
+
+  .stack-body {
+    padding-left: 200px;
+  }
+}
+
+.stack-head .h2 {
+  max-width: 22ch;
+}
+
+.stack-head .lede {
+  grid-column: -2;
+  max-width: 60ch;
+}
+
+.stack-body {
+  display: grid;
+  gap: var(--sp-md);
+}
+
+/* ---------------------------------------------- walkthrough steps */
+
+.walk {
+  display: grid;
+  gap: var(--sp-md);
+}
+
+.walk-step {
+  display: grid;
+  gap: var(--sp-sm);
+  padding: var(--sp-md);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-md);
+  background: var(--desk-raised);
+}
+
+@media (min-width: 980px) {
+  .walk-step {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: var(--sp-lg);
+    align-items: center;
+    padding: var(--sp-lg);
+  }
+}
+
+.walk-copy {
+  display: grid;
+  gap: var(--sp-2xs);
+  align-content: start;
+}
+
+.walk-copy .tag {
+  margin-bottom: 4px;
+}
+
+.walk-copy p {
+  color: var(--ink-mid);
+  font-size: var(--fs-sm);
+  max-width: 46ch;
+}
+
+.walk-detail {
+  display: grid;
+  gap: 6px;
+  margin-top: var(--sp-2xs);
+  padding-top: var(--sp-2xs);
+  border-top: 1px solid var(--line-soft);
+}
+
+.walk-detail div {
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  gap: var(--sp-xs);
+  font-size: var(--fs-xs);
+  color: var(--ink-low);
+}
+
+.walk-detail strong {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--fs-tag);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  padding-top: 0.15em;
+}
+
+/* the small live-looking demo inside each step */
+.walk-demo {
+  display: grid;
+  gap: var(--sp-2xs);
+  padding: var(--sp-sm);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-md);
+  background: var(--desk-inset);
+}
+
+.demo-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-xs);
+  padding: 10px 12px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-sm);
+  background: var(--desk);
+  font-size: var(--fs-xs);
+  color: var(--ink-mid);
+}
+
+.demo-row-active {
+  border-color: var(--cobalt-quiet);
+}
+
+.demo-note {
+  font-size: var(--fs-tag);
+  font-family: var(--font-mono), monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* ---------------------------------------------- worked example */
+
+.worked {
+  display: grid;
+  gap: var(--sp-sm);
+  padding: var(--sp-md);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--desk-raised);
+}
+
+@media (min-width: 980px) {
+  .worked {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--sp-md);
+    padding: var(--sp-lg);
+    align-items: start;
+  }
+}
+
+.worked-side {
+  display: grid;
+  gap: var(--sp-xs);
+  align-content: start;
+}
+
+.worked-ask {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--desk-inset);
+}
+
+.worked-ask p {
+  margin-top: 6px;
+  font-size: var(--fs-sm);
+}
+
+.worked-answer {
+  display: grid;
+  gap: var(--sp-2xs);
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--desk-panel);
+}
+
+.worked-answer p {
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+}
+
+.worked-label {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--fs-tag);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* ---------------------------------------------- pipeline */
+
+.pipeline {
+  display: grid;
+}
+
+.stage {
+  display: grid;
+  gap: var(--sp-2xs);
+  padding-block: var(--sp-md);
+  border-top: 1px solid var(--line-soft);
+}
+
+.stage:last-child {
+  border-bottom: 1px solid var(--line-soft);
+}
+
+@media (min-width: 900px) {
+  .stage {
+    grid-template-columns: 132px minmax(0, 1fr) minmax(0, 0.7fr);
+    gap: var(--sp-md);
+    align-items: baseline;
+  }
+}
+
+.stage-tag {
+  align-self: start;
+}
+
+.stage h3 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.stage p {
+  margin-top: 4px;
+  color: var(--ink-mid);
+  font-size: var(--fs-sm);
+  max-width: 56ch;
+}
+
+.stage-file {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--fs-xs);
+  color: var(--ink-faint);
+  word-break: break-word;
+}
+
+/* ---------------------------------------------- code and formula blocks */
+
+.slab {
+  padding: var(--sp-sm) var(--sp-md);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-md);
+  background: var(--desk-inset);
+  font-family: var(--font-mono), monospace;
+  font-size: var(--fs-xs);
+  line-height: 1.85;
+  color: var(--ink-mid);
+  overflow-x: auto;
+}
+
+.slab-legend {
+  display: grid;
+  gap: 4px;
+  margin-top: var(--sp-xs);
+}
+
+.slab-legend div {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: var(--sp-xs);
+  font-size: var(--fs-xs);
+  color: var(--ink-low);
+}
+
+.slab-legend span:first-child {
+  font-family: var(--font-mono), monospace;
+  color: var(--cobalt-lift);
+}
+
+/* ---------------------------------------------- decisions */
+
+.calls {
+  display: grid;
+  gap: var(--sp-sm);
+}
+
+@media (min-width: 900px) {
+  .calls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.call {
+  display: grid;
+  gap: var(--sp-2xs);
+  align-content: start;
+  padding: var(--sp-md);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-md);
+  background: var(--desk-raised);
+}
+
+.call h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.call p {
+  color: var(--ink-mid);
+  font-size: var(--fs-sm);
+}
+
+.call-cost {
+  padding-top: var(--sp-2xs);
+  border-top: 1px solid var(--line-soft);
+  color: var(--ink-low) !important;
+  font-size: var(--fs-xs) !important;
+}
+
+.call-cost strong {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--fs-tag);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  font-weight: 500;
+}
+
+/* ---------------------------------------------- two-path diagram */
+
+.paths {
+  display: grid;
+  gap: var(--sp-sm);
+}
+
+@media (min-width: 820px) {
+  .paths {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.path {
+  display: grid;
+  gap: var(--sp-2xs);
+  align-content: start;
+  padding: var(--sp-md);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-md);
+}
+
+.path-live {
+  border-color: var(--cobalt-quiet);
+  background: color-mix(in oklab, var(--cobalt) 7%, transparent);
+}
+
+.path ol {
+  display: grid;
+  gap: 6px;
+  margin-top: var(--sp-2xs);
+}
+
+.path li {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: var(--sp-2xs);
+  font-size: var(--fs-sm);
+  color: var(--ink-mid);
+}
+
+.path li span {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--fs-tag);
+  color: var(--ink-faint);
+  padding-top: 0.35em;
+}
+
+/* ---------------------------------------------- plain lists */
+
+.plain-list {
+  display: grid;
+  gap: var(--sp-xs);
+  max-width: 68ch;
+}
+
+.plain-list li {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  gap: var(--sp-xs);
+  align-items: baseline;
+  padding-bottom: var(--sp-xs);
+  border-bottom: 1px solid var(--line-soft);
+  color: var(--ink-mid);
+  font-size: var(--fs-sm);
+}
+
+.plain-list li span:first-child {
+  width: 10px;
+  height: 1px;
+  background: var(--cobalt-lift);
+  transform: translateY(-4px);
+}
+
+/* ---------------------------------------------- chips */
+
+.stack-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.stack-chip {
+  padding: 7px 12px;
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  color: var(--ink-mid);
+  font-size: var(--fs-xs);
+}
+
+/* ---------------------------------------------- page footer nav */
+
+.page-next {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-xs);
+  padding-block: var(--sp-xl) var(--sp-2xl);
+}

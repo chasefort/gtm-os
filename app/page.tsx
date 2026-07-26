@@ -89,9 +89,9 @@ export default function HomePage() {
               <Link className="btn btn-primary" href="/tool">
                 Open the tool
               </Link>
-              <a className="btn" href="#how">
+              <Link className="btn" href="/how-it-works">
                 See how it works
-              </a>
+              </Link>
             </div>
             <p className="hero-note">
               No login. Runs in your browser. Load the demo set in one click or bring your own files.
@@ -187,6 +187,12 @@ export default function HomePage() {
               </li>
             ))}
           </ol>
+
+          <div className="band-more" data-reveal>
+            <Link className="btn btn-sm" href="/how-it-works">
+              See it step by step, with a worked example
+            </Link>
+          </div>
         </section>
 
         {/* ---------------------------------------------- counts */}
@@ -280,6 +286,12 @@ export default function HomePage() {
                 </p>
               </div>
             </div>
+          </div>
+
+          <div className="band-more" data-reveal>
+            <Link className="btn btn-sm" href="/tech">
+              Read the full breakdown
+            </Link>
           </div>
         </section>
 

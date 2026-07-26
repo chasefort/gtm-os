@@ -204,6 +204,16 @@
   color: var(--cobalt-lift);
 }
 
+.band-more {
+  margin-top: var(--sp-md);
+}
+
+@media (min-width: 900px) {
+  .band-more {
+    padding-left: 200px;
+  }
+}
+
 /* ---------------------------------------------- counts */
 
 .counts {
