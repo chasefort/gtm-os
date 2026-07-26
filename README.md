@@ -76,7 +76,7 @@ Citations:
 | Review UX | Line-accurate source reader, citation chips, copy and Markdown export |
 | Python version | Streamlit implementation retained in `app.py` |
 
-Retrieval never leaves the browser. Chunks carry their source line numbers, which is what lets the reader highlight the exact lines an answer used. With no `OPENAI_API_KEY` set, answers are assembled from the retrieved passages and the UI labels the mode as local.
+Retrieval never leaves the browser. Chunks carry their source line numbers, which is what lets the reader highlight the exact lines an answer used. Without `OPENAI_API_KEY`, the tool shows the retrieved passages but does not present them as a finished answer.
 
 ## Transferable Implementation Patterns
 
@@ -130,7 +130,7 @@ The Vercel URL serves the usable Next.js workspace. The Dockerfile is only neede
 
 ## Engineering Notes
 
-- **Local-first fallback.** The main app can answer grounded questions without a hosted model.
+- **Honest retrieval fallback.** Without a hosted model, the app shows related passages and says that retrieval alone cannot produce a reliable answer.
 - **Citations before confidence.** Answers point back to source chunks so a reviewer can verify support.
 - **Contradictions are part of the test set.** The fictional docs intentionally include inconsistent pricing, positioning, and risk language.
 - **Hosted synthesis is additive.** Model-backed answers improve open-ended reasoning but do not replace the source-grounded retrieval layer.

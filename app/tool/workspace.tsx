@@ -445,7 +445,7 @@ export function Workspace({ sampleDocs }: { sampleDocs: SourceDoc[] }) {
       <section className="thread-pane">
         <div className="pane-head">
           <span className="tag">{workspaceName}</span>
-          <span className="tag">{lastAnswer ? `${lastAnswer.answer.mode} answers` : "Ready"}</span>
+          <span className="tag">{lastAnswer ? `${lastAnswer.answer.mode} mode` : "Ready"}</span>
         </div>
 
         <div className="thread" ref={threadRef}>

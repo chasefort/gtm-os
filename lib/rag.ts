@@ -30,7 +30,7 @@ export type Answer = {
   confidence: Confidence;
   passageCount: number;
   docCount: number;
-  mode: "Local" | "Model";
+  mode: "Retrieval" | "Model";
   evidence: Passage[];
 };
 
@@ -48,21 +48,6 @@ function tokenize(input: string) {
     .split(/\s+/)
     .map((word) => word.replace(/^[-.]+|[-.]+$/g, ""))
     .filter((word) => word.length > 2 && !STOPWORDS.has(word));
-}
-
-function sentences(text: string) {
-  return text
-    .split(/(?<=[.!?])\s+(?=[A-Z$"'(])/)
-    .map((sentence) => sentence.trim())
-    .filter(Boolean);
-}
-
-/** First one or two sentences, capped so cards stay even. */
-function lead(text: string, limit = 300) {
-  const parts = sentences(text);
-  let out = parts[0] || text;
-  if (out.length < limit * 0.55 && parts[1]) out = `${out} ${parts[1]}`;
-  return out.length > limit ? `${out.slice(0, limit - 1).trimEnd()}…` : out;
 }
 
 /* ---------------------------------- chunking ---------------------------------- */
@@ -217,50 +202,12 @@ export function retrieve(docs: SourceDoc[], query: string, limit = 6): Passage[]
 
 /* ---------------------------------- reading the evidence ---------------------------------- */
 
-const MONEY = /\$\s?\d[\d,]*(?:\.\d+)?\s?(?:k|m|bn)?(?:\s?(?:\/|per\s)\s?(?:mo|month|yr|year|seat|user|record))?/gi;
 const HAS_MONEY = /\$\s?\d/;
 
 const ABSOLUTE_CLAIMS = [
   "guarantee", "guaranteed", "guarantees", "100%", "fully automated", "eliminates", "never fails",
   "always compliant", "risk-free", "zero risk", "ensures compliance", "replaces legal", "instantly approved",
 ];
-
-/**
- * Distinct money figures, keyed on the amount alone so "$999" and "$999/month"
- * are not counted as two different prices.
- */
-function moneyFigures(passages: Passage[]) {
-  const found = new Map<string, { display: string; refs: Set<number>; docs: Set<string> }>();
-  passages.forEach((passage) => {
-    (passage.text.match(MONEY) || []).forEach((raw) => {
-      const amount = raw.match(/\$\s?[\d,.]+\s?(?:k|m|bn)?/i)?.[0] || raw;
-      const key = amount.replace(/[\s,]/g, "").toLowerCase();
-      const display = raw.trim();
-      const entry = found.get(key);
-      if (entry) {
-        entry.refs.add(passage.reference);
-        entry.docs.add(passage.docTitle);
-        if (display.length > entry.display.length) entry.display = display;
-      } else {
-        found.set(key, { display, refs: new Set([passage.reference]), docs: new Set([passage.docTitle]) });
-      }
-    });
-  });
-  return found;
-}
-
-function riskyPhrases(passages: Passage[]) {
-  const hits: Array<{ phrase: string; reference: number; docTitle: string }> = [];
-  passages.forEach((passage) => {
-    const lower = passage.text.toLowerCase();
-    ABSOLUTE_CLAIMS.forEach((phrase) => {
-      if (lower.includes(phrase) && !hits.some((hit) => hit.phrase === phrase)) {
-        hits.push({ phrase, reference: passage.reference, docTitle: passage.docTitle });
-      }
-    });
-  });
-  return hits;
-}
 
 type Lens = "numbers" | "risk" | "conflict" | "objections" | "plan" | "general";
 
@@ -273,15 +220,6 @@ function readLens(query: string): Lens {
   if (/(campaign|launch|plan|next quarter|roadmap|strategy|messag)/.test(q)) return "plan";
   return "general";
 }
-
-const NEXT_STEP: Record<Lens, string> = {
-  numbers: "Confirm which figure is current with whoever owns pricing before either number goes in front of a customer.",
-  risk: "Rewrite any line that promises more than the sources actually support, then get it reviewed.",
-  conflict: "Pick which version is right, write it down in one place, and retire the other one.",
-  objections: "Turn the strongest source lines into a talk track and test it on the next three calls.",
-  plan: "Draft the plan straight from the cited lines so every claim already has a source behind it.",
-  general: "Open the cited sources and check the wording before you reuse any of this externally.",
-};
 
 /* ---------------------------------- answer ---------------------------------- */
 
@@ -298,7 +236,7 @@ export function emptyAnswer(query: string): Answer {
     confidence: "Thin",
     passageCount: 0,
     docCount: 0,
-    mode: "Local",
+    mode: "Retrieval",
     evidence: [],
   };
 }
@@ -307,92 +245,18 @@ export function buildLocalAnswer(docs: SourceDoc[], query: string): Answer {
   const evidence = retrieve(docs, query, 6);
   if (!evidence.length) return emptyAnswer(query);
 
-  const lens = readLens(query);
   const docTitles = [...new Set(evidence.map((passage) => passage.docTitle))];
-  const top = evidence[0];
-
-  let summary = `${lead(top.text)} [${top.reference}]`;
-
-  // When the passages carry something checkable, lead with that instead of an extract.
-  if (lens === "numbers") {
-    const figures = moneyFigures(evidence);
-    if (figures.size > 1) {
-      const cited = [...figures.values()]
-        .slice(0, 3)
-        .map((figure) => `${figure.display} [${[...figure.refs][0]}]`)
-        .join(", ");
-      summary = `The documents do not line up. ${figures.size} different figures show up across the set: ${cited}.`;
-    } else if (figures.size === 1) {
-      const figure = [...figures.values()][0];
-      summary = `One figure shows up across the set: ${figure.display} [${[...figure.refs][0]}]. Nothing here contradicts it.`;
-    }
-  }
-
-  if (lens === "risk") {
-    const risky = riskyPhrases(evidence);
-    if (risky.length) {
-      const cited = risky.slice(0, 3).map((hit) => `"${hit.phrase}" [${hit.reference}]`).join(", ");
-      summary = `${risky.length} line${risky.length > 1 ? "s" : ""} here promise${risky.length > 1 ? "" : "s"} more than the sources back up: ${cited}.`;
-    }
-  }
-
-  // One point per document, so the answer spans the set instead of repeating one file.
-  const seen = new Set([top.docId]);
-  const points: string[] = [];
-  evidence.forEach((passage) => {
-    if (seen.has(passage.docId) || points.length >= 3) return;
-    seen.add(passage.docId);
-    points.push(`${lead(passage.text, 220)} [${passage.reference}]`);
-  });
-  if (points.length < 2) {
-    evidence.slice(1).forEach((passage) => {
-      if (points.length >= 2) return;
-      const line = `${lead(passage.text, 220)} [${passage.reference}]`;
-      if (!points.includes(line) && line !== summary) points.push(line);
-    });
-  }
-
-  let watchOut: string | null = null;
-
-  if (lens === "numbers") {
-    const figures = moneyFigures(evidence);
-    const split = [...figures.values()].filter((figure) => figure.docs.size > 0);
-    if (figures.size > 1) {
-      const where = [...new Set(split.flatMap((figure) => [...figure.docs]))].slice(0, 2).join(" and ");
-      watchOut = `These figures come from different places, including ${where}. Check which one is current before quoting either.`;
-    }
-  }
-
-  if (!watchOut && (lens === "risk" || lens === "plan")) {
-    const risky = riskyPhrases(evidence);
-    if (risky.length) {
-      const list = risky.slice(0, 3).map((hit) => `"${hit.phrase}" [${hit.reference}]`).join(", ");
-      watchOut = `These sources use absolute wording: ${list}. That is the kind of line that gets pulled apart in review.`;
-    }
-  }
-
-  if (!watchOut && lens === "conflict" && docTitles.length > 1) {
-    watchOut = `${docTitles.slice(0, 2).join(" and ")} both speak to this and they do not say the same thing. Read them side by side.`;
-  }
-
-  const spread = top.score / (evidence[evidence.length - 1]?.score || top.score);
-  const confidence: Confidence =
-    evidence.length >= 4 && docTitles.length >= 3 && spread < 6
-      ? "Well supported"
-      : evidence.length >= 3 && docTitles.length >= 2
-        ? "Partly supported"
-        : "Thin";
 
   return {
     query,
-    summary,
-    points,
-    watchOut,
-    nextStep: NEXT_STEP[lens],
-    confidence,
+    summary: `I found ${evidence.length} related passages, but retrieval alone cannot answer this question reliably.`,
+    points: [],
+    watchOut: "The passages may share words with the question without supporting a useful conclusion.",
+    nextStep: "Configure the model step to turn these passages into a cited answer.",
+    confidence: "Thin",
     passageCount: evidence.length,
     docCount: docTitles.length,
-    mode: "Local",
+    mode: "Retrieval",
     evidence,
   };
 }
@@ -421,6 +285,7 @@ export async function buildAnswer(docs: SourceDoc[], query: string): Promise<Ans
       points?: string[];
       watchOut?: string | null;
       nextStep?: string;
+      confidence?: Confidence;
     };
     if (!data.summary) return local;
     return {
@@ -429,6 +294,12 @@ export async function buildAnswer(docs: SourceDoc[], query: string): Promise<Ans
       points: data.points?.length ? data.points : local.points,
       watchOut: data.watchOut ?? local.watchOut,
       nextStep: data.nextStep || local.nextStep,
+      confidence:
+        data.confidence === "Well supported" ||
+        data.confidence === "Partly supported" ||
+        data.confidence === "Thin"
+          ? data.confidence
+          : "Thin",
       mode: "Model",
     };
   } catch {
