@@ -313,7 +313,7 @@ export default function HomePage() {
       <footer className="footer">
         <div className="shell footer-inner">
           <span className="tag">GTM OS</span>
-          <span className="tag">Built by Chase Fort</span>
+          <a className="founder-link" href="https://www.frontierresearch.xyz/">By Chase Fort, founder of Frontier Research</a>
         </div>
       </footer>
     </>
